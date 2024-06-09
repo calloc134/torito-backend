@@ -17,6 +17,11 @@ class TorrcRepository:
         
         self.path = path
 
+    def backup(self, backupPath: str) -> None:
+        with open(self.path, "r") as f:
+            with open(backupPath, "w") as b:
+                b.write(f.read())
+
     def load(self) -> Config:
         with open(self.path, "r") as f:
             # インデックスを付与する
@@ -100,7 +105,7 @@ class TorrcRepository:
             f.write("\n".join([f"Socks5Proxy {Socks5ProxyParam}" for Socks5ProxyParam in config.proxyConfig.Socks5ProxyParams]) + "\n")
             f.write("\n".join([f"Socks5ProxyUsername {Socks5ProxyUsernameParam}" for Socks5ProxyUsernameParam in config.proxyConfig.Socks5ProxyUsernameParams]) + "\n")
             f.write("\n".join([f"Socks5ProxyPassword {Socks5ProxyPasswordParam}" for Socks5ProxyPasswordParam in config.proxyConfig.Socks5ProxyPasswordParams]) + "\n")
-            
+
             f.write("### End of generated ###\n\n")
             
             f.write("\n".join(config.others))
