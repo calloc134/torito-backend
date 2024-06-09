@@ -1,8 +1,6 @@
 
 from torito_prototype.repository.torrcRepository import TorrcRepository
 from torito_prototype.usecase.handle import Handle
-from pprint import pprint
-
 
 def main():
     # 初期化
@@ -13,8 +11,7 @@ def main():
 
     # torrc読み込み
     dto = usecase.load()
-    pprint(dto.__dict__)
-
+    
     # torrc保存
     usecase.torrcRepository.path = "torrc.new"
 

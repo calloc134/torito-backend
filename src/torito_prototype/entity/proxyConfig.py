@@ -1,6 +1,7 @@
 import re
 
-proxyPattern = r"?P<host>[\w\.-]+:(?P<port>\d{1,5})"
+# ホスト名は任意の文字列もしくはアドレス、ポート番号は1~5桁の数字
+proxyPattern = r"^([a-zA-Z0-9.-]+):\d{1,5}$"
 
 class ProxyConfig: 
 
