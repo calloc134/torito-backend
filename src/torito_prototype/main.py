@@ -2,6 +2,12 @@
 from torito_prototype.repository.torrcRepository import TorrcRepository
 from torito_prototype.usecase.handle import Handle
 
+# fastapiのエンドポイントを作成する
+from fastapi import FastAPI
+import uvicorn
+app = FastAPI()
+
+
 def main():
     # 初期化
 
@@ -9,16 +15,19 @@ def main():
     path = "/home/user/git-space/torito-prototype/src/torito_prototype/torrc.example"
     usecase = Handle(TorrcRepository(path))
 
-    # torrcバックアップ
+    @app.get("/torrc")
+    def get_torrc():
+        dto = usecase.load()
+        return dto
     
-
-    # torrc読み込み
-    dto = usecase.load()
-    
-    # torrc保存
-    # usecase.torrcRepository.path = "torrc.new"
-
-    usecase.save(dto)
-
+    @app.post("/torrc")
+    def post_torrc():
+        try:
+            usecase.save()
+            return {"message": "torrc saved"}
+        except Exception as e:
+            return {"message": f"Error: {e}"}
+        
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 main()
