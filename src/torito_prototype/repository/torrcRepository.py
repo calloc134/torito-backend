@@ -95,16 +95,25 @@ class TorrcRepository:
             if config.useBridge:
                 f.write("UseBridges 1\n")
 
-            f.write("\n".join([f"Bridge {bridgeParam}" for bridgeParam in config.bridgeConfig.bridgeParams]) + "\n")
+            if config.bridgeConfig.bridgeParams:
+                f.write("\n".join([f"Bridge {bridgeParam}" for bridgeParam in config.bridgeConfig.bridgeParams]) + "\n")
 
-            f.write("\n".join([f"HTTPProxy {HTTPProxyParam}" for HTTPProxyParam in config.proxyConfig.HTTPProxyParams]) + "\n")
-            f.write("\n".join([f"HTTPProxyAuthenticator {HTTPProxyAuthenticatorParam}" for HTTPProxyAuthenticatorParam in config.proxyConfig.HTTPProxyAuthenticatorParams]) + "\n")
-            f.write("\n".join([f"HTTPSProxy {HTTPSProxyParam}" for HTTPSProxyParam in config.proxyConfig.HTTPSProxyParams]) + "\n")
-            f.write("\n".join([f"HTTPSProxyAuthenticator {HTTPSProxyAuthenticatorParam}" for HTTPSProxyAuthenticatorParam in config.proxyConfig.HTTPSProxyAuthenticatorParams]) + "\n")
-            f.write("\n".join([f"Socks4Proxy {Socks4ProxyParam}" for Socks4ProxyParam in config.proxyConfig.Socks4ProxyParams]) + "\n")
-            f.write("\n".join([f"Socks5Proxy {Socks5ProxyParam}" for Socks5ProxyParam in config.proxyConfig.Socks5ProxyParams]) + "\n")
-            f.write("\n".join([f"Socks5ProxyUsername {Socks5ProxyUsernameParam}" for Socks5ProxyUsernameParam in config.proxyConfig.Socks5ProxyUsernameParams]) + "\n")
-            f.write("\n".join([f"Socks5ProxyPassword {Socks5ProxyPasswordParam}" for Socks5ProxyPasswordParam in config.proxyConfig.Socks5ProxyPasswordParams]) + "\n")
+            if config.proxyConfig.HTTPProxyParams:
+                f.write("\n".join([f"HTTPProxy {HTTPProxyParam}" for HTTPProxyParam in config.proxyConfig.HTTPProxyParams]) + "\n")
+            if config.proxyConfig.HTTPProxyAuthenticatorParams:
+                f.write("\n".join([f"HTTPProxyAuthenticator {HTTPProxyAuthenticatorParam}" for HTTPProxyAuthenticatorParam in config.proxyConfig.HTTPProxyAuthenticatorParams]) + "\n")
+            if config.proxyConfig.HTTPSProxyParams:
+                f.write("\n".join([f"HTTPSProxy {HTTPSProxyParam}" for HTTPSProxyParam in config.proxyConfig.HTTPSProxyParams]) + "\n")
+            if config.proxyConfig.HTTPSProxyAuthenticatorParams:
+                f.write("\n".join([f"HTTPSProxyAuthenticator {HTTPSProxyAuthenticatorParam}" for HTTPSProxyAuthenticatorParam in config.proxyConfig.HTTPSProxyAuthenticatorParams]) + "\n")
+            if config.proxyConfig.Socks4ProxyParams:
+                f.write("\n".join([f"Socks4Proxy {Socks4ProxyParam}" for Socks4ProxyParam in config.proxyConfig.Socks4ProxyParams]) + "\n")
+            if config.proxyConfig.Socks5ProxyParams:
+                f.write("\n".join([f"Socks5Proxy {Socks5ProxyParam}" for Socks5ProxyParam in config.proxyConfig.Socks5ProxyParams]) + "\n")
+            if config.proxyConfig.Socks5ProxyUsernameParams:
+                f.write("\n".join([f"Socks5ProxyUsername {Socks5ProxyUsernameParam}" for Socks5ProxyUsernameParam in config.proxyConfig.Socks5ProxyUsernameParams]) + "\n")
+            if config.proxyConfig.Socks5ProxyPasswordParams:
+                f.write("\n".join([f"Socks5ProxyPassword {Socks5ProxyPasswordParam}" for Socks5ProxyPasswordParam in config.proxyConfig.Socks5ProxyPasswordParams]) + "\n")
 
             f.write("### End of generated ###\n\n")
             
