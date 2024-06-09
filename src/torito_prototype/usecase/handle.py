@@ -1,6 +1,6 @@
 import re
-from torito_prototype.repository import TorrcRepository
-from torito_prototype.entity import config
+from torito_prototype.repository.torrcRepository import TorrcRepository
+from torito_prototype.entity.config import Config, ProxyConfig, BridgeConfig
 
 bridgeEntryPattern = re.compile(
     r"(?P<directive>Bridge )(?P<args>.*)"
@@ -11,7 +11,7 @@ proxyEntryPattern = re.compile(
 )
 
 
-class dto:
+class Dto:
     useBridge: bool
     BridgeText: str
     ProxyText: str
@@ -23,26 +23,26 @@ class dto:
         self.ProxyText = ProxyText
         self.others = others
 
-class hande:
+class Handle:
     torrcRepository: TorrcRepository
 
     def __init__(self, torrcRepository: TorrcRepository):
         self.torrcRepository = torrcRepository
 
-    def load(self, dto: dto) -> dto:
+    def load(self) -> Dto:
         config = self.torrcRepository.load()
 
-        bridgeText = "\n".join(f"Bridge {bridgeParam}" for bridgeParam in config.BridgeConfig.bridgeParams)
-        proxyText = "\n".join(f"HTTPProxy {HTTPProxyParam}" for HTTPProxyParam in config.ProxyConfig.HTTPProxyParams) + "\n" + \
-            "\n".join(f"HTTPProxyAuthenticator {HTTPProxyAuthenticatorParam}" for HTTPProxyAuthenticatorParam in config.ProxyConfig.HTTPProxyAuthenticatorParams) + "\n" + \
-            "\n".join(f"HTTPSProxy {HTTPSProxyParam}" for HTTPSProxyParam in config.ProxyConfig.HTTPSProxyParams) + "\n" + \
-            "\n".join(f"HTTPSProxyAuthenticator {HTTPSProxyAuthenticatorParam}" for HTTPSProxyAuthenticatorParam in config.ProxyConfig.HTTPSProxyAuthenticatorParams) + "\n" + \
-            "\n".join(f"Socks4Proxy {Socks4ProxyParam}" for Socks4ProxyParam in config.ProxyConfig.Socks4ProxyParams) + "\n" + \
-            "\n".join(f"Socks5Proxy {Socks5ProxyParam}" for Socks5ProxyParam in config.ProxyConfig.Socks5ProxyParams) + "\n" + \
-            "\n".join(f"Socks5ProxyUsername {Socks5ProxyUsernameParam}" for Socks5ProxyUsernameParam in config.ProxyConfig.Socks5ProxyUsernameParams) + "\n" + \
-            "\n".join(f"Socks5ProxyPassword {Socks5ProxyPasswordParam}" for Socks5ProxyPasswordParam in config.ProxyConfig.Socks5ProxyPasswordParams) + "\n"
+        bridgeText = "\n".join(f"Bridge {bridgeParam}" for bridgeParam in config.bridgeConfig.bridgeParams)
+        proxyText = "\n".join(f"HTTPProxy {HTTPProxyParam}" for HTTPProxyParam in config.proxyConfig.HTTPProxyParams) + "\n" + \
+            "\n".join(f"HTTPProxyAuthenticator {HTTPProxyAuthenticatorParam}" for HTTPProxyAuthenticatorParam in config.proxyConfig.HTTPProxyAuthenticatorParams) + "\n" + \
+            "\n".join(f"HTTPSProxy {HTTPSProxyParam}" for HTTPSProxyParam in config.proxyConfig.HTTPSProxyParams) + "\n" + \
+            "\n".join(f"HTTPSProxyAuthenticator {HTTPSProxyAuthenticatorParam}" for HTTPSProxyAuthenticatorParam in config.proxyConfig.HTTPSProxyAuthenticatorParams) + "\n" + \
+            "\n".join(f"Socks4Proxy {Socks4ProxyParam}" for Socks4ProxyParam in config.proxyConfig.Socks4ProxyParams) + "\n" + \
+            "\n".join(f"Socks5Proxy {Socks5ProxyParam}" for Socks5ProxyParam in config.proxyConfig.Socks5ProxyParams) + "\n" + \
+            "\n".join(f"Socks5ProxyUsername {Socks5ProxyUsernameParam}" for Socks5ProxyUsernameParam in config.proxyConfig.Socks5ProxyUsernameParams) + "\n" + \
+            "\n".join(f"Socks5ProxyPassword {Socks5ProxyPasswordParam}" for Socks5ProxyPasswordParam in config.proxyConfig.Socks5ProxyPasswordParams) + "\n"
 
-        dto = dto(
+        dto = Dto(
             useBridge=config.useBridge,
             BridgeText=bridgeText,
             ProxyText=proxyText,
@@ -51,7 +51,7 @@ class hande:
 
         return dto
     
-    def save(self, dto: dto) -> None:
+    def save(self, dto: Dto) -> None:
         # configとして解析
         tmp = {
             "UseBridges": dto.useBridge,
@@ -107,10 +107,10 @@ class hande:
                     case _:
                         tmp["others"].append(line)
 
-        config = config.Config(
+        config = Config(
             useBridge=tmp["UseBridges"],
-            BridgeConfig=config.BridgeConfig(bridgeParams=tmp["Bridge"]),
-            ProxyConfig=config.ProxyConfig(
+            bridgeConfig=BridgeConfig(bridgeParams=tmp["Bridge"]),
+            proxyConfig=ProxyConfig(
                 HTTPProxyParams=tmp["HTTPProxy"],
                 HTTPProxyAuthenticatorParams=tmp["HTTPProxyAuthenticator"],
                 HTTPSProxyParams=tmp["HTTPSProxy"],
