@@ -9,11 +9,14 @@ def main():
     path = "/home/user/git-space/torito-prototype/src/torito_prototype/torrc.example"
     usecase = Handle(TorrcRepository(path))
 
+    # torrcバックアップ
+    
+
     # torrc読み込み
     dto = usecase.load()
     
     # torrc保存
-    usecase.torrcRepository.path = "torrc.new"
+    # usecase.torrcRepository.path = "torrc.new"
 
     usecase.save(dto)
 
