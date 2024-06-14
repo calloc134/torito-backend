@@ -38,8 +38,9 @@ class Dto:
     backUpPath: str
     others: list[str]
 
-    def __init__(self, useBridge: bool, BridgeText: str, ProxyText: str, others: list[str], backUpPath: str):
+    def __init__(self, useBridge: bool, BridgeText: str, ProxyText: str, others: list[str], backUpPath: str, useDefaultBridges: bool):
         self.useBridge = useBridge
+        self.useDefaultBridges = useDefaultBridges
         self.BridgeText = BridgeText
         self.ProxyText = ProxyText
         self.others = others
