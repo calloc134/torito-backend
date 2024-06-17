@@ -10,6 +10,16 @@ app = FastAPI()
 
 def main():
     # 初期化
+    app = FastAPI()
+
+    # CORS対策
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     # path = input("torrcのパスを入力してください: ")
     path = "/home/user/git-space/torito-prototype/src/torito_prototype/torrc.example"
@@ -28,15 +38,6 @@ def main():
         except Exception as e:
             return {"message": f"Error: {e}"}
     
-
-    # CORSへの対応
-    @app.middleware("http")
-    async def add_cors_header(request, call_next):
-        response = await call_next(request)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "*"
-        return response
     
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
