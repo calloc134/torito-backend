@@ -2,6 +2,7 @@ import re
 import os
 from torito_prototype.entity.config import Config, ProxyConfig, BridgeConfig
 from datetime import datetime
+from returns.result import Result, Success, Failure
 
 
 entryPattern = re.compile(
@@ -28,15 +29,23 @@ class TorrcRepository:
         self.path = path
         self.backUpPath = backUpPath
 
-    def backup(self):
-        with open(self.path, "r") as f:
-            with open(self.backUpPath, "w") as b:
-                b.write(f.read())
+    def backup(self) -> Result[None, Exception]:
+        try:
+            with open(self.path, "r") as f:
+                with open(self.backUpPath, "w") as b:
+                    b.write(f.read())
+            return Success(None)
+        except Exception as e:
+            return Failure(e)
 
-    def load(self) -> Config:
-        with open(self.path, "r") as f:
-            # インデックスを付与する
-            lines = enumerate(f.readlines(), start=1)
+    def load(self) -> Result[Config, Exception]:
+
+        try:
+            with open(self.path, "r") as f:
+                # インデックスを付与する
+                lines = enumerate(f.readlines(), start=1)
+        except Exception as e:
+            return Failure(e)
 
         tmp = {
             "UseBridges": False,
@@ -87,7 +96,7 @@ class TorrcRepository:
                 case "Socks5ProxyPassword":
                     tmp["Socks5ProxyPassword"].append(args)
 
-        return Config(
+        return Success(Config(
             useBridge=tmp["UseBridges"],
             bridgeConfig=BridgeConfig(bridgeParams=tmp["Bridge"]),
             proxyConfig=ProxyConfig(
@@ -101,9 +110,9 @@ class TorrcRepository:
                 Socks5ProxyPasswordParams=tmp["Socks5ProxyPassword"]
             ),
             others=tmp["others"]
-        )
+        ))
     
-    def save(self, config: Config) -> bool:
+    def save(self, config: Config) -> Result[None, Exception]:
         try:
             with open(self.path, "w") as f:
 
@@ -135,6 +144,6 @@ class TorrcRepository:
                 
                 f.write("\n".join(config.others))
         except Exception as e:
-            return False
+            return Failure(e)
         
-        return True
+        return Success(None)
