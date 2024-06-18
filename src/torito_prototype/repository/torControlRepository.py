@@ -54,7 +54,7 @@ class TorControlRepository:
         # Linuxであればsystemctlを使ってtorを起動
         if self.deviceType == "Linux":
             try: 
-                self.manager.StartUnit('tor.service', 'replace')
+                self.manager.RestartUnit('tor.service', 'replace')
             except Exception as e:
                 print(e)
                 raise Exception(f"Failed to start tor: {e}")
@@ -62,18 +62,34 @@ class TorControlRepository:
             print
             raise Exception(f"Unsupported device type: {self.deviceType}")
         
+
         # torが起動するまで待つ
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # 0.5秒毎に確認
+        # 3回持続したら成功として扱う
+        # 60回過ぎたら強制的に次に
         count = 0
-        while not sock.connect_ex((self.torIp, self.torPort)) == 0 and count < 10:
-            sleep(1)
-            count += 1
+        successCount = 0
+        while count < 60:
+            try:
+                sock.connect_ex((self.torIp, self.torPort))
+                successCount += 1
+            except Exception as e:
+                print(e)
+                successCount = 0
+            finally:
+                count += 1
+                sleep(0.5)
+            
+            if successCount > 3:
+                break
 
-        tor_controller = control.Controller.from_port(port=9051)
+        tor_controller = control.Controller.from_port(port=self.torPort)
 
         try:
             tor_controller.authenticate()
         except Exception as e:
+            print("Failed to authenticate")
             raise Exception(f"Failed to authenticate: {e}")
         
         # 購読を開始
