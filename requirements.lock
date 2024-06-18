@@ -68,6 +68,8 @@ python-multipart==0.0.9
     # via fastapi
 pyyaml==6.0.1
     # via uvicorn
+returns==0.23.0
+    # via torito-prototype
 rich==13.7.1
     # via typer
 shellingham==1.5.4
@@ -85,6 +87,7 @@ typing-extensions==4.12.2
     # via fastapi
     # via pydantic
     # via pydantic-core
+    # via returns
     # via typer
 ujson==5.10.0
     # via fastapi
