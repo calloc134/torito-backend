@@ -126,7 +126,7 @@ class TorrcRepository:
                 if config.proxyConfig.Socks5ProxyPasswordParams:
                     f.write("\n".join([f"Socks5ProxyPassword {Socks5ProxyPasswordParam}" for Socks5ProxyPasswordParam in config.proxyConfig.Socks5ProxyPasswordParams]) + "\n")
 
-                f.write("### End of generated ###\n\n")
+                f.write("### End of generated ###\n")
                 
                 f.write("\n".join(config.others))
         except Exception as e:
