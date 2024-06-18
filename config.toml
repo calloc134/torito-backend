@@ -1,0 +1,3 @@
+torrcPath = "./torrc.example"
+torIp = "localhost"
+torPort = 9051
