@@ -17,8 +17,13 @@ class TorrcRepository:
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
         
-        # 同じディレクトリでバックアップファイルのパスを作成
-        backUpPath = path + f".bak.{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        # バックアップを格納するディレクトリを作成
+        if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
+
+        # ディレクトリパス取得
+        backUpDir = os.path.dirname(path)    
+        backUpPath = os.path.join(backUpDir, f"torrc_{datetime.now().strftime('%Y%m%d%H%M%S')}.bak")
         
         self.path = path
         self.backUpPath = backUpPath
