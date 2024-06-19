@@ -22,22 +22,22 @@ class ProxyConfig:
         # ここでは正規表現でフォーマットを確認
         for HTTPProxyParam in HTTPProxyParams:
             if not re.match(proxyPattern, HTTPProxyParam):
-                raise ValueError(f"Invalid HTTPProxyParam: {HTTPProxyParam}")
+                raise ValueError(f"Invalid HTTPProxy Parameter: {HTTPProxyParam}")
         for HTTPProxyAuthenticatorParam in HTTPProxyAuthenticatorParams:
             if not re.match(proxyPattern, HTTPProxyAuthenticatorParam):
-                raise ValueError(f"Invalid HTTPProxyAuthenticatorParam: {HTTPProxyAuthenticatorParam}")
+                raise ValueError(f"Invalid HTTPProxyAuthenticator Parameter: {HTTPProxyAuthenticatorParam}")
         for HTTPSProxyParam in HTTPSProxyParams:
             if not re.match(proxyPattern, HTTPSProxyParam):
-                raise ValueError(f"Invalid HTTPSProxyParam: {HTTPSProxyParam}")
+                raise ValueError(f"Invalid HTTPSProxy Parameter: {HTTPSProxyParam}")
         for HTTPSProxyAuthenticatorParam in HTTPSProxyAuthenticatorParams:
             if not re.match(proxyPattern, HTTPSProxyAuthenticatorParam):
-                raise ValueError(f"Invalid HTTPSProxyAuthenticatorParam: {HTTPSProxyAuthenticatorParam}")
+                raise ValueError(f"Invalid HTTPSProxyAuthenticator Parameter: {HTTPSProxyAuthenticatorParam}")
         for Socks4ProxyParam in Socks4ProxyParams:
             if not re.match(proxyPattern, Socks4ProxyParam):
-                raise ValueError(f"Invalid Socks4ProxyParam: {Socks4ProxyParam}")
+                raise ValueError(f"Invalid Socks4Proxy Parameter: {Socks4ProxyParam}")
         for Socks5ProxyParam in Socks5ProxyParams:
             if not re.match(proxyPattern, Socks5ProxyParam):
-                raise ValueError(f"Invalid Socks5ProxyParam: {Socks5ProxyParam}")
+                raise ValueError(f"Invalid Socks5Proxy Parameter: {Socks5ProxyParam}")
             
         self.HTTPProxyParams = HTTPProxyParams
         self.HTTPProxyAuthenticatorParams = HTTPProxyAuthenticatorParams
