@@ -31,6 +31,7 @@ def main():
     path = config["torrcPath"]
     torIp = config["torIp"]
     torPort = config["torPort"]
+    backUpDirName = config["backUpDirName"]
 
     app = FastAPI()
 
@@ -42,7 +43,7 @@ def main():
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    usecase = Handle(TorrcRepository(path), TorControlRepository(deviceType, torIp, torPort))
+    usecase = Handle(TorrcRepository(path=path, backUpDirName=backUpDirName), TorControlRepository(deviceType, torIp, torPort))
 
     # 初期化
     app = FastAPI()
@@ -65,6 +66,6 @@ def main():
     def post_torrc(dto: Dto) -> StreamingResponse:
         return StreamingResponse(usecase.save(dto=dto), media_type="text/event-stream")
 
-    uvicorn.run(app, host="0.0.0.0", port=3001)
+    uvicorn.run(app, host="localhost", port=3001)
 
 main()
