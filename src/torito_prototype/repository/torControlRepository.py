@@ -4,6 +4,7 @@ import socket
 from time import sleep
 from typing import Generator
 import re
+from fastapi import HTTPException
 
 
 tagPhase = {
@@ -57,10 +58,10 @@ class TorControlRepository:
                 self.manager.RestartUnit('tor.service', 'replace')
             except Exception as e:
                 print(e)
-                raise Exception(f"Failed to start tor: {e}")
+                raise HTTPException(status_code=500, detail=f"Failed to restart tor.service: {e}")
         else: 
             print
-            raise Exception(f"Unsupported device type: {self.deviceType}")
+            raise HTTPException(status_code=500, detail=f"Unsupported device type: {self.deviceType}")
         
 
         # torが起動するまで待つ
@@ -89,8 +90,7 @@ class TorControlRepository:
         try:
             tor_controller.authenticate()
         except Exception as e:
-            print("Failed to authenticate")
-            raise Exception(f"Failed to authenticate: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to authenticate: {e}")
         
         # 購読を開始
         bootstrap_percent = 0
@@ -105,7 +105,7 @@ class TorControlRepository:
                 previous_percent = bootstrap_percent
 
                 if not bootstrap_tag in tagPhase:
-                    print(f"Unknown tag: {bootstrap_tag}")
+                    # print(f"Unknown tag: {bootstrap_tag}")
                     continue
 
                 print(f"{tagPhase[bootstrap_tag]}: {bootstrap_percent}%")

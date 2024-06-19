@@ -3,6 +3,8 @@ from torito_prototype.repository.torrcRepository import TorrcRepository
 from torito_prototype.repository.torControlRepository import TorControlRepository
 from torito_prototype.entity.config import Config, ProxyConfig, BridgeConfig
 from typing import Generator
+from fastapi import HTTPException
+from returns.pipeline import is_successful
 
 
 bridgeEntryPattern = re.compile(
@@ -40,7 +42,12 @@ class Handle:
         self.torControlRepository = torControlRepository
 
     def load(self) -> Dto:
-        config = self.torrcRepository.load()
+        configResult = self.torrcRepository.load()
+
+        if not is_successful(configResult):
+            raise HTTPException(status_code=500, detail=f"Failed to load torrc. Detail: {configResult.failure()}")
+        
+        config = configResult.unwrap()
 
         bridgeText = "\n".join(f"Bridge {bridgeParam}" for bridgeParam in config.bridgeConfig.bridgeParams)
         proxyText = "\n".join(f"HTTPProxy {HTTPProxyParam}" for HTTPProxyParam in config.proxyConfig.HTTPProxyParams) + "\n" + \
@@ -68,7 +75,10 @@ class Handle:
     def save(self, dto: Dto) -> Generator[str, None, None]:
 
         # まずtorrcをバックアップ
-        self.torrcRepository.backup()
+        backUpResult = self.torrcRepository.backup()
+
+        if not is_successful(backUpResult):
+            raise HTTPException(status_code=500, detail=f"Failed to backup torrc. Detail: {backUpResult.failure()}")
 
         # configとして解析
         tmp = {
@@ -149,8 +159,8 @@ class Handle:
 
         result = self.torrcRepository.save(config)
 
-        if not result:
-            raise Exception("Failed to save torrc")
+        if not is_successful(result):
+            raise HTTPException(status_code=500, detail=f"Failed to save torrc. Detail: {result.failure()}")
         
         for message in self.torControlRepository.startTor():
             yield message
