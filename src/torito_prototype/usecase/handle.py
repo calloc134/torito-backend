@@ -74,94 +74,113 @@ class Handle:
     
     def save(self, dto: Dto) -> Generator[str, None, None]:
 
-        # まずtorrcをバックアップ
-        backUpResult = self.torrcRepository.backup()
+        try: 
 
-        if not is_successful(backUpResult):
-            raise HTTPException(status_code=500, detail=f"Failed to backup torrc. Detail: {backUpResult.failure()}")
+            # まずtorrcをバックアップ
+            backUpResult = self.torrcRepository.backup()
 
-        # configとして解析
-        tmp = {
-            "UseBridges": dto.useBridge,
-            # デフォルトブリッジを利用する場合
-            "Bridge": [],
-            "HTTPProxy": [],
-            "HTTPProxyAuthenticator": [],
-            "HTTPSProxy": [],
-            "HTTPSProxyAuthenticator": [],
-            "Socks4Proxy": [],
-            "Socks5Proxy": [],
-            "Socks5ProxyUsername": [],
-            "Socks5ProxyPassword": [],
-            "others": []
-        }
+            if not is_successful(backUpResult):
+                raise Exception(f"Failed to backup torrc. Detail: {backUpResult.failure()}")
 
-        tmp["others"] = dto.others
+            # configとして解析
+            tmp = {
+                "UseBridges": dto.useBridge,
+                # デフォルトブリッジを利用する場合
+                "Bridge": [],
+                "HTTPProxy": [],
+                "HTTPProxyAuthenticator": [],
+                "HTTPSProxy": [],
+                "HTTPSProxyAuthenticator": [],
+                "Socks4Proxy": [],
+                "Socks5Proxy": [],
+                "Socks5ProxyUsername": [],
+                "Socks5ProxyPassword": [],
+                "others": []
+            }
 
-        # デフォルトブリッジを利用するかどうかの条件分岐が必要
-        if dto.useDefaultBridges:
-            tmp["Bridge"] = defaultBridge
-        else:
-            for line in dto.BridgeText.split("\n"):
-                match = bridgeEntryPattern.match(line)
+            tmp["others"] = dto.others
+
+            # デフォルトブリッジを利用するかどうかの条件分岐が必要
+            if dto.useDefaultBridges:
+                tmp["Bridge"] = defaultBridge
+            else:
+                for line in dto.BridgeText.split("\n"):
+                    # 空行をスキップ
+                    if line.strip() == "":
+                        continue
+                    match = bridgeEntryPattern.match(line)
+                    if match:
+                        directive = match.group("directive").strip()
+                        args = match.group("args").strip()
+
+                        match directive:
+                            case "Bridge":
+                                tmp["Bridge"].append(args)
+                            case _:
+                                tmp["others"].append(line)
+                    else:
+                        print("Invalid bridge entry: {line}")
+                        raise Exception(f"Invalid bridge entry: {line}")
+            
+            for line in dto.ProxyText.split("\n"):
+                # 空行をスキップ
+                if line.strip() == "":
+                    continue
+                match = proxyEntryPattern.match(line)
                 if match:
                     directive = match.group("directive").strip()
                     args = match.group("args").strip()
 
                     match directive:
-                        case "Bridge":
-                            tmp["Bridge"].append(args)
+                        case "HTTPProxy":
+                            tmp["HTTPProxy"].append(args)
+                        case "HTTPProxyAuthenticator":
+                            tmp["HTTPProxyAuthenticator"].append(args)
+                        case "HTTPSProxy":
+                            tmp["HTTPSProxy"].append(args)
+                        case "HTTPSProxyAuthenticator":
+                            tmp["HTTPSProxyAuthenticator"].append(args)
+                        case "Socks4Proxy":
+                            tmp["Socks4Proxy"].append(args)
+                        case "Socks5Proxy":
+                            tmp["Socks5Proxy"].append(args)
+                        case "Socks5ProxyUsername":
+                            tmp["Socks5ProxyUsername"].append(args)
+                        case "Socks5ProxyPassword":
+                            tmp["Socks5ProxyPassword"].append(args)
                         case _:
-                            tmp["others"].append(line)
-        
-        for line in dto.ProxyText.split("\n"):
-            match = proxyEntryPattern.match(line)
-            if match:
-                directive = match.group("directive").strip()
-                args = match.group("args").strip()
-
-                match directive:
-                    case "HTTPProxy":
-                        tmp["HTTPProxy"].append(args)
-                    case "HTTPProxyAuthenticator":
-                        tmp["HTTPProxyAuthenticator"].append(args)
-                    case "HTTPSProxy":
-                        tmp["HTTPSProxy"].append(args)
-                    case "HTTPSProxyAuthenticator":
-                        tmp["HTTPSProxyAuthenticator"].append(args)
-                    case "Socks4Proxy":
-                        tmp["Socks4Proxy"].append(args)
-                    case "Socks5Proxy":
-                        tmp["Socks5Proxy"].append(args)
-                    case "Socks5ProxyUsername":
-                        tmp["Socks5ProxyUsername"].append(args)
-                    case "Socks5ProxyPassword":
-                        tmp["Socks5ProxyPassword"].append(args)
-                    case _:
-                        tmp["others"].append(line)
-
-        config = Config(
-            useBridge=tmp["UseBridges"],
-            bridgeConfig=BridgeConfig(bridgeParams=tmp["Bridge"]),
-            proxyConfig=ProxyConfig(
-                HTTPProxyParams=tmp["HTTPProxy"],
-                HTTPProxyAuthenticatorParams=tmp["HTTPProxyAuthenticator"],
-                HTTPSProxyParams=tmp["HTTPSProxy"],
-                HTTPSProxyAuthenticatorParams=tmp["HTTPSProxyAuthenticator"],
-                Socks4ProxyParams=tmp["Socks4Proxy"],
-                Socks5ProxyParams=tmp["Socks5Proxy"],
-                Socks5ProxyUsernameParams=tmp["Socks5ProxyUsername"],
-                Socks5ProxyPasswordParams=tmp["Socks5ProxyPassword"]
-            ),
-            others=tmp["others"]
-        )
+                            raise Exception(f"Invalid proxy entry: {line}")
+                else:
+                    raise Exception(f"Invalid proxy entry: {line}")
 
 
-        result = self.torrcRepository.save(config)
+            try: 
+                config = Config(
+                    useBridge=tmp["UseBridges"],
+                    bridgeConfig=BridgeConfig(bridgeParams=tmp["Bridge"]),
+                    proxyConfig=ProxyConfig(
+                        HTTPProxyParams=tmp["HTTPProxy"],
+                        HTTPProxyAuthenticatorParams=tmp["HTTPProxyAuthenticator"],
+                        HTTPSProxyParams=tmp["HTTPSProxy"],
+                        HTTPSProxyAuthenticatorParams=tmp["HTTPSProxyAuthenticator"],
+                        Socks4ProxyParams=tmp["Socks4Proxy"],
+                        Socks5ProxyParams=tmp["Socks5Proxy"],
+                        Socks5ProxyUsernameParams=tmp["Socks5ProxyUsername"],
+                        Socks5ProxyPasswordParams=tmp["Socks5ProxyPassword"]
+                    ),
+                    others=tmp["others"]
+                )
+            except Exception as e:
+                raise Exception(f"Failed to parse config: {str(e)}")
 
-        if not is_successful(result):
-            raise HTTPException(status_code=500, detail=f"Failed to save torrc. Detail: {result.failure()}")
-        
-        for message in self.torControlRepository.startTor():
-            yield message
-        
+            result = self.torrcRepository.save(config)
+
+            if not is_successful(result):
+                raise Exception(f"Failed to save torrc. Detail: {result.failure()}")
+            
+            for message in self.torControlRepository.startTor():
+                yield message
+            
+        # 苦肉のエラーハンドリング
+        except Exception as e:
+            yield "error: " + str(e)
