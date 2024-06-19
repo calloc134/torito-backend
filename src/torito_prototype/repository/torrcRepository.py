@@ -1,5 +1,6 @@
 import re
 import os
+from os.path import dirname, join, exists
 from torito_prototype.entity.config import Config, ProxyConfig, BridgeConfig
 from datetime import datetime
 from returns.result import Result, Success, Failure
@@ -13,18 +14,17 @@ class TorrcRepository:
     path: str
     backUpPath: str
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, backUpDirName: str):
         # ファイルが存在するかチェック
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
-        
+                
         # バックアップを格納するディレクトリを作成
-        if not os.path.exists(os.path.dirname(path)):
-            os.makedirs(os.path.dirname(path))
-
+        if not exists(join(dirname(path), backUpDirName)):
+            os.makedirs(join(dirname(path), backUpDirName))
+            
         # ディレクトリパス取得
-        backUpDir = os.path.dirname(path)    
-        backUpPath = os.path.join(backUpDir, f"torrc_{datetime.now().strftime('%Y%m%d%H%M%S')}.bak")
+        backUpPath = join(dirname(path), backUpDirName, f"{datetime.now().strftime('%Y%m%d%H%M%S')}_torrc")
         
         self.path = path
         self.backUpPath = backUpPath
