@@ -9,6 +9,8 @@
 #   generate-hashes: false
 
 -e file:.
+altgraph==0.17.4
+    # via pyinstaller
 annotated-types==0.7.0
     # via pydantic
 anyio==4.4.0
@@ -56,12 +58,19 @@ nest-asyncio==1.6.0
     # via torito-prototype
 orjson==3.10.3
     # via fastapi
+packaging==24.1
+    # via pyinstaller
+    # via pyinstaller-hooks-contrib
 pydantic==2.7.3
     # via fastapi
 pydantic-core==2.18.4
     # via pydantic
 pygments==2.18.0
     # via rich
+pyinstaller==6.8.0
+    # via torito-prototype
+pyinstaller-hooks-contrib==2024.7
+    # via pyinstaller
 python-dotenv==1.0.1
     # via uvicorn
 python-multipart==0.0.9
@@ -100,3 +109,6 @@ watchfiles==0.22.0
     # via uvicorn
 websockets==12.0
     # via uvicorn
+setuptools==70.0.0
+    # via pyinstaller
+    # via pyinstaller-hooks-contrib
