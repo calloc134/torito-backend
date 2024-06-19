@@ -4,7 +4,6 @@ import socket
 from time import sleep
 from typing import Generator
 import re
-from fastapi import HTTPException
 
 
 tagPhase = {
@@ -58,10 +57,10 @@ class TorControlRepository:
                 self.manager.RestartUnit('tor.service', 'replace')
             except Exception as e:
                 print(e)
-                raise HTTPException(status_code=500, detail=f"Failed to restart tor.service: {e}")
+                raise Exception("Failed to restart tor service: " + str(e))
         else: 
             print
-            raise HTTPException(status_code=500, detail=f"Unsupported device type: {self.deviceType}")
+            raise Exception("Unsupported device type: " + self.deviceType)
         
 
         # torが起動するまで待つ
@@ -90,7 +89,7 @@ class TorControlRepository:
         try:
             tor_controller.authenticate()
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to authenticate: {e}")
+            raise Exception("Failed to authenticate tor controller: " + str(e))
         
         # 購読を開始
         bootstrap_percent = 0
