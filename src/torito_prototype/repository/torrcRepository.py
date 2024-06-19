@@ -96,22 +96,28 @@ class TorrcRepository:
                 case "Socks5ProxyPassword":
                     tmp["Socks5ProxyPassword"].append(args)
 
-        return Success(Config(
-            useBridge=tmp["UseBridges"],
-            bridgeConfig=BridgeConfig(bridgeParams=tmp["Bridge"]),
-            proxyConfig=ProxyConfig(
-                HTTPProxyParams=tmp["HTTPProxy"],
-                HTTPProxyAuthenticatorParams=tmp["HTTPProxyAuthenticator"],
-                HTTPSProxyParams=tmp["HTTPSProxy"],
-                HTTPSProxyAuthenticatorParams=tmp["HTTPSProxyAuthenticator"],
-                Socks4ProxyParams=tmp["Socks4Proxy"],
-                Socks5ProxyParams=tmp["Socks5Proxy"],
-                Socks5ProxyUsernameParams=tmp["Socks5ProxyUsername"],
-                Socks5ProxyPasswordParams=tmp["Socks5ProxyPassword"]
-            ),
-            others=tmp["others"]
-        ))
-    
+
+        try: 
+            config = Config(
+                useBridge=tmp["UseBridges"],
+                bridgeConfig=BridgeConfig(bridgeParams=tmp["Bridge"]),
+                proxyConfig=ProxyConfig(
+                    HTTPProxyParams=tmp["HTTPProxy"],
+                    HTTPProxyAuthenticatorParams=tmp["HTTPProxyAuthenticator"],
+                    HTTPSProxyParams=tmp["HTTPSProxy"],
+                    HTTPSProxyAuthenticatorParams=tmp["HTTPSProxyAuthenticator"],
+                    Socks4ProxyParams=tmp["Socks4Proxy"],
+                    Socks5ProxyParams=tmp["Socks5Proxy"],
+                    Socks5ProxyUsernameParams=tmp["Socks5ProxyUsername"],
+                    Socks5ProxyPasswordParams=tmp["Socks5ProxyPassword"]
+                ),
+                others=tmp["others"]
+            )
+
+            return Success(config)
+        except Exception as e:
+            return Failure(e)
+        
     def save(self, config: Config) -> Result[None, Exception]:
         try:
             with open(self.path, "w") as f:
