@@ -16,8 +16,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: sudo apt update && sudo apt install -y python3-dbus
-      - run: pip install pyinstaller fastapi uvicorn nest-asyncio stem returns
+      - run: sudo apt update && sudo apt install -y build-essential libpython3-dev libdbus-1-dev
+      - run: pip install .
       - run: pyinstaller --onefile src/torito_prototype/main.py -n torito_prototype
       - name: Upload artifact
         uses: actions/upload-artifact@v4
