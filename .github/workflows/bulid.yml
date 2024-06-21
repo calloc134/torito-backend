@@ -19,8 +19,12 @@ jobs:
       - run: sudo apt update && sudo apt install -y build-essential libpython3-dev libdbus-1-dev
       - run: pip install .
       - run: pyinstaller --onefile src/torito_prototype/main.py -n torito_prototype
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+
+      - name: create a short SHA
+        run: echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: torito_prototype
-          path: dist/torito_prototype
+          files: dist.zip
+          tag_name: ${{ env.SHORT_SHA }}
