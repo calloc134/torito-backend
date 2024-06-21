@@ -1,0 +1,21 @@
+name: build with pyinstaller
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: apt update && apt install -y python-dbus
+      - run: pip install pyinstaller fastapi uvicorn nest-asyncio stem returns
+      - run: pyinstaller --onefile src/torito_prototype/main.py
