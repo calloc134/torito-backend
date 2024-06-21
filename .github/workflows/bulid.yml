@@ -16,6 +16,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: sudo apt update && sudo apt install -y dbus-python
+      - run: sudo apt update && sudo apt install -y python-dbus
       - run: pip install pyinstaller fastapi uvicorn nest-asyncio stem returns
       - run: pyinstaller --onefile src/torito_prototype/main.py
