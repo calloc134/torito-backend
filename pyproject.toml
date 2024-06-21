@@ -30,3 +30,6 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/torito_prototype"]
+
+[tool.rye.scripts]
+torito-prototype = "torito_prototype/src/main.py"
