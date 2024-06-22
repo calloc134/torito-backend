@@ -9,7 +9,8 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-import tomllib
+# import tomllib
+import argparse
 import platform
 
 class Dto(BaseModel):
@@ -25,13 +26,20 @@ def main():
     deviceType = platform.system()
 
     # toml構成ファイルを読み込む
-    with open("./config.toml", "rb") as f:
-        config = tomllib.load(f)
+    # with open("./config.toml", "rb") as f:
+    #     config = tomllib.load(f)
 
-    path = config["torrcPath"]
-    torIp = config["torIp"]
-    torPort = config["torPort"]
-    backUpDirName = config["backUpDirName"]
+    # path = config["torrcPath"]
+    # torIp = config["torIp"]
+    # torPort = config["torPort"]
+    # backUpDirName = config["backUpDirName"]
+
+    # 引数を受け取る
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--torrcPath", type=str, required=True)
+    parser.add_argument("--torIp", type=str, required=True)
+    parser.add_argument("--torPort", type=int, required=True)
+    parser.add_argument("--backUpDirName", type=str, required=True)
 
     app = FastAPI()
 
