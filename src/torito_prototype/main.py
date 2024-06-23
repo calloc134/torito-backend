@@ -25,21 +25,18 @@ def main():
     # 実行デバイスを判定
     deviceType = platform.system()
 
-    # toml構成ファイルを読み込む
-    # with open("./config.toml", "rb") as f:
-    #     config = tomllib.load(f)
-
-    # path = config["torrcPath"]
-    # torIp = config["torIp"]
-    # torPort = config["torPort"]
-    # backUpDirName = config["backUpDirName"]
-
     # 引数を受け取る
     parser = argparse.ArgumentParser()
     parser.add_argument("--torrcPath", type=str, required=True)
     parser.add_argument("--torIp", type=str, required=True)
     parser.add_argument("--torPort", type=int, required=True)
     parser.add_argument("--backUpDirName", type=str, required=True)
+
+    args = parser.parse_args()
+    path = args.torrcPath
+    torIp = args.torIp
+    torPort = args.torPort
+    backUpDirName = args.backUpDirName
 
     app = FastAPI()
 
