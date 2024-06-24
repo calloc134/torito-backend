@@ -20,11 +20,11 @@ class TorrcRepository:
             raise FileNotFoundError(f"File not found: {path}")
                 
         # バックアップを格納するディレクトリを作成
-        if not exists(join(dirname(path), backUpDirName)):
-            os.makedirs(join(dirname(path), backUpDirName))
+        if not exists(backUpDirName):
+            os.makedirs(backUpDirName)
             
         # ディレクトリパス取得
-        backUpPath = join(dirname(path), backUpDirName, f"{datetime.now().strftime('%Y%m%d%H%M%S')}_torrc")
+        backUpPath = join(backUpDirName, f"{datetime.now().strftime('%Y%m%d%H%M%S')}_torrc")
         
         self.path = path
         self.backUpPath = backUpPath
