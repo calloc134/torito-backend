@@ -1,4 +1,0 @@
-torrcPath = "./torrc.example"
-backUpDirName = "backups"
-torIp = "localhost"
-torPort = 9051
