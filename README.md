@@ -1,3 +1,12 @@
-# torito-prototype
+# Torito - Tor Connection Manager
 
-Describe your project here.
+## Description
+
+Torito is a simple Tor connection manager.  
+This tool allows you to connect to the Tor network and set up tor bridges or proxies.
+
+Inspired by [Anon Connection Wizard](https://www.whonix.org/wiki/Anon_Connection_Wizard).
+
+## Installation
+
+Check the README.md file in [torito-frontend](https://github.com/calloc134/torito-frontend).
