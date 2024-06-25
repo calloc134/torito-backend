@@ -20,3 +20,8 @@ Check the README.md file in [torito-frontend](https://github.com/calloc134/torit
 - [Stem](https://stem.torproject.org)
 - [dbus-python](https://www.freedesktop.org/wiki/Software/DBusBindings/#python)
 - [PyInstaller](https://www.pyinstaller.org)
+
+### Issues
+
+- [ ] Support for authentication of ControlPort
+- [ ] Support for unix domain socket of ControlPort
