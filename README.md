@@ -10,3 +10,13 @@ Inspired by [Anon Connection Wizard](https://www.whonix.org/wiki/Anon_Connection
 ## Installation
 
 Check the README.md file in [torito-frontend](https://github.com/calloc134/torito-frontend).
+
+## Development
+
+### Prerequisites
+
+- [Python 3.11](https://www.python.org)
+- [FastAPI](https://fastapi.tiangolo.com)
+- [Stem](https://stem.torproject.org)
+- [dbus-python](https://www.freedesktop.org/wiki/Software/DBusBindings/#python)
+- [PyInstaller](https://www.pyinstaller.org)
